@@ -22,6 +22,11 @@ int Application::exec() {
         case 1:
             cout << "a = ";
             cin >> a;
+            while (a == 0) {
+                cout << "You write a = 0! It's impossible. Please, write a different value" << endl;
+                cout << "a = ";
+                cin >> a;
+            }
             cout << "b = ";
             cin >> b;
             cout << "c = ";
