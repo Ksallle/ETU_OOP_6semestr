@@ -2,8 +2,11 @@
 #include "polinom.h"
 #include "number.h"
 #include <iostream>
+#include <conio.h>
 
 using namespace std;
+
+number a = 1, b = 2 ,c = 1;
 
 Application::Application()
 {
@@ -12,7 +15,6 @@ Application::Application()
 
 int Application::exec() {
     int ch;
-    number a = 1, b = 2 ,c = 1;
 
     while (true) {
         ch = menu();
@@ -40,8 +42,14 @@ int Application::exec() {
                 Polinom p(a, b, c);
                 vector<number> roots;
                 roots = p.getRoots();
-                for (int i = 0; i < roots.size(); i++) {
-                    cout << roots[i] << endl;
+                if (roots.size() == 0)
+                    break;
+                else if (roots[0] == roots[1]) {
+                    cout << "x1 = x2 = " << roots[0] << endl;
+                }
+                else {
+                    for (int i = 0; i < 2; i ++)
+                        cout << "x" << i << " = " << roots[i] << endl;
                 }
             }
             break;
@@ -49,14 +57,14 @@ int Application::exec() {
             {
                 Polinom p(a, b, c);
                 p.setPrintMode(EPrintModeClassical);
-                cout << p << endl;
+                cout << p;
             }
             break;
         case 5:
             {
                 Polinom p(a, b, c);
                 p.setPrintMode(EPrintModeCanonical);
-                cout << p << endl;
+                cout << p;
             }
             break;
         case 0:
@@ -65,11 +73,15 @@ int Application::exec() {
         default:
             break;
         }
+        getch();
     }
 }
 
 int Application::menu() {
     int ch;
+    system("cls");
+    cout << "Current polynomial: ";
+    cout << a << "x^2" << showpos << b << "x" << c << noshowpos << endl << endl;
     cout << "1 - coefficients" << endl;
     cout << "2 - value" << endl;
     cout << "3 - roots" << endl;
