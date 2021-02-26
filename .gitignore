@@ -9,15 +9,16 @@
 *.so
 *.dll
 *.dylib
+*.exe
 
 # Qt-es
 
-/.qmake.cache
-/.qmake.stash
-/*.pro.user
-/*.pro.user.*
-/*.qbs.user
-/*.qbs.user.*
+\.qmake.cache
+\.qmake.stash
+\*.pro.user
+\*.pro.user.*
+\*.qbs.user
+\*.qbs.user.*
 
 *.pro.user
 *.pro.user.*
@@ -36,8 +37,10 @@ Makefile*
 *.autosave
 
 # QtCtreator Qml
+
 *.qmlproject.user
 *.qmlproject.user.*
 
 # QtCtreator CMake
+
 CMakeLists.txt.user*
