@@ -4,9 +4,14 @@ TControlWindow::TControlWindow(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Окно управления");
 
-    resize(563, 187);
-    setMinimumSize(QSize(563, 187));
-    setMaximumSize(QSize(563, 187));
+    resize(320, 187);
+    setMinimumSize(QSize(320, 187));
+    setMaximumSize(QSize(320, 187));
+
+    msg = new QLabel(this);
+    msg->setGeometry(QRect(10, 170, 301, 20));
+    msg->setAlignment(Qt::AlignCenter);
+    msg->setText("");
 
     label = new QLabel(this);
     label->setGeometry(QRect(10, 10, 161, 16));
@@ -29,18 +34,15 @@ TControlWindow::TControlWindow(QWidget *parent) : QWidget(parent)
     num_fuel->setDigitCount(1);
 
     add_car_to_queue_button = new QPushButton(this);
-    add_car_to_queue_button->setGeometry(QRect(110, 150, 80, 21));
+    add_car_to_queue_button->setGeometry(QRect(120, 150, 80, 21));
     add_car_to_queue_button->setText("Добавить");
-
-    list_of_added_cars = new QListView(this);
-    list_of_added_cars->setGeometry(QRect(320, 20, 221, 141));
 
     label_numCars = new QLabel(this);
     label_numCars->setGeometry(QRect(20, 40, 91, 16));
     label_numCars->setText("Номер машины");
 
-    numCars = new QLineEdit(this);
-    numCars->setGeometry(QRect(20, 60, 81, 20));
+    numCar = new QLineEdit(this);
+    numCar->setGeometry(QRect(20, 60, 81, 20));
 
     label_countFuel = new QLabel(this);
     label_countFuel->setGeometry(QRect(20, 90, 121, 16));
@@ -50,6 +52,10 @@ TControlWindow::TControlWindow(QWidget *parent) : QWidget(parent)
     countFuel->setGeometry(QRect(20, 110, 42, 22));
     countFuel->setMinimum(1);
 
+    connect(first_fuel_button, SIGNAL(clicked()), this, SLOT(on_FirstFuelButton_clicked()));
+    connect(second_fuel_button, SIGNAL(clicked()), this, SLOT(on_SecondFuelButton_clicked()));
+    connect(third_fuel_button, SIGNAL(clicked()), this, SLOT(on_ThirdFuelButton_clicked()));
+    connect(add_car_to_queue_button, SIGNAL(clicked()), this, SLOT(check_for_correct()));
 }
 
 TControlWindow::~TControlWindow()
@@ -61,9 +67,7 @@ TControlWindow::~TControlWindow()
 
     delete num_fuel;
 
-    delete list_of_added_cars;
-
-    delete numCars;
+    delete numCar;
 
     delete countFuel;
 
@@ -73,4 +77,52 @@ void TControlWindow::closeEvent(QCloseEvent* event)
 {
     emit closing();
     event->accept();
+}
+
+void TControlWindow::on_FirstFuelButton_clicked()
+{
+    num_fuel->display(1);
+}
+
+void TControlWindow::on_SecondFuelButton_clicked()
+{
+    num_fuel->display(2);
+
+}
+
+void TControlWindow::on_ThirdFuelButton_clicked()
+{
+    num_fuel->display(3);
+
+}
+
+void TControlWindow::send_request()
+{
+    QJsonObject request;
+    request.insert("type_window", "controlWindow");
+    request.insert("action", "add_car");
+    request.insert("num_car", numCar->text());
+    request.insert("count_fuel", countFuel->value());
+    request.insert("type_fuel", num_fuel->value());
+
+
+
+
+
+    emit send_controlWindow_request(request);
+}
+
+void TControlWindow::check_for_correct()
+{
+    qDebug() << "Try to send request";
+    if (numCar->text().isEmpty() == false && num_fuel->value() != 0 && countFuel->value() != 0) {
+        send_request();
+        qDebug() << "Send request";
+        numCar->setText("");
+        countFuel->setValue(0);
+        num_fuel->display(0);
+    }
+    else {
+        msg->setText("Дозаполните форму");
+    }
 }

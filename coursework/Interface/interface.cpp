@@ -38,12 +38,6 @@ TInterface::~TInterface()
     delete control_button;
 }
 
-//void TInterface::setCurrentParameters(const TParametersData parameters)
-//{
-//    if (parametersWindow != nullptr)
-//        parametersWindow->setCurrentParameters(parameters);
-//}
-
 void TInterface::closeEvent(QCloseEvent* event)
 {
     if (parametersWindow != nullptr) {
@@ -68,7 +62,10 @@ void TInterface::parametersWindowOpen()
     if (parametersWindow == nullptr) {
         parametersWindow = new TParametersWindow;
 
-        connect(parametersWindow, SIGNAL(closing()),this,SLOT(parametersWindowClosed()));
+        connect(parametersWindow, SIGNAL(closing()), this, SLOT(parametersWindowClosed()));
+
+        connect(parametersWindow, SIGNAL(send_parametersWindow_request(QJsonObject)), this, SLOT(formRequest(QJsonObject)));
+
 
         parametersWindow->show();
     }
@@ -96,9 +93,19 @@ void TInterface::controlWindowOpen()
 
         connect(controlWindow, SIGNAL(closing()),this,SLOT(controlWindowClosed()));
 
+        connect(controlWindow, SIGNAL(send_controlWindow_request(QJsonObject)), this, SLOT(formRequest(QJsonObject)));
+
+
         controlWindow->show();
     }
 
+}
+
+void TInterface::update_windows(QJsonObject response)
+{
+    if (response["type_window"].toString() == "statesWindow") {
+        statesWindow->update_states(response);
+    }
 }
 
 void TInterface::parametersWindowClosed()
@@ -122,7 +129,9 @@ void TInterface::controlWindowClosed()
     controlWindow = nullptr;
 }
 
-//void TInterface::restoreParameters()
-//{
-//    emit parametersRequest(PARAMETERS_REQUEST, nullptr);
-//}
+void TInterface::formRequest(QJsonObject req)
+{
+    qDebug() << "TInterface::formRequest";
+    emit request(req);
+}
+

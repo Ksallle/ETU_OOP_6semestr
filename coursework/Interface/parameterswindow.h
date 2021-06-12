@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef TPARAMETERSWINDOW_H
 #define TPARAMETERSWINDOW_H
 
@@ -7,8 +9,9 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QCloseEvent>
+#include <QJsonObject>
 
-#include "common.h"
+#include "../common/common.h"
 
 class TParametersWindow : public QWidget
 {
@@ -16,7 +19,7 @@ class TParametersWindow : public QWidget
 
     QWidget *layoutWidget, *layoutWidget1;
 
-    QPushButton *accept_button, *reset_button;
+    QPushButton *accept_button;
 
     QSpinBox *count_stations, *count_cars;
 
@@ -30,21 +33,20 @@ class TParametersWindow : public QWidget
 
 
 public:
-    TParametersWindow(QWidget *parent = nullptr);
+    TParametersWindow(QWidget *parent = 0);
     ~TParametersWindow();
 
-//    void setCurrentParameters(const TParametersData);
+    void setCurrentParameters(const TParametersData);
 
 protected:
     void closeEvent(QCloseEvent*);
 
 public slots:
-//    void setParameters();
+    void setParameters();
 
 signals:
     void closing();
-//    void sendParameters(TParametersData);
-//    void restoreParameters();
+    void send_parametersWindow_request(QJsonObject);
 
 };
 

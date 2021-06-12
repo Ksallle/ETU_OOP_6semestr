@@ -11,13 +11,9 @@ CONFIG -= app_bundle
 
 SOURCES += \
         application.cpp \
-        controlwindow.cpp \
-        interface.cpp \
         main.cpp \
-        parameterswindow.cpp \
-        stateswindow.cpp \
-        tcpclient.cpp
-
+        model.cpp \
+        tcpserver.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -27,8 +23,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     ../common/common.h \
     application.h \
-    controlwindow.h \
-    interface.h \
-    parameterswindow.h \
-    stateswindow.h \
-    tcpclient.h
+    model.h \
+    tcpserver.h

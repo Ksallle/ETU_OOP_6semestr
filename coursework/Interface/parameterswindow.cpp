@@ -19,10 +19,6 @@ TParametersWindow::TParametersWindow(QWidget *parent) : QWidget(parent)
 
     horizontalLayout->addWidget(accept_button);
 
-    reset_button = new QPushButton(this);
-    reset_button->setText("Сброс");
-
-    horizontalLayout->addWidget(reset_button);
 
     layoutWidget1 = new QWidget(this);
     layoutWidget1->setGeometry(QRect(10, 20, 321, 71));
@@ -67,18 +63,16 @@ TParametersWindow::TParametersWindow(QWidget *parent) : QWidget(parent)
 
     verticalLayout->addLayout(horizontalLayout_2);
 
-//    connect(accept_button,SIGNAL(pressed()),this,SLOT(setParameters()));
-//    connect(reset_button,SIGNAL(pressed()),this,SLOT(restoreParameters()));
-
-
+    connect(accept_button,SIGNAL(pressed()),this,SLOT(setParameters()));
 
 }
+
 
 TParametersWindow::~TParametersWindow()
 {
     delete layoutWidget; delete layoutWidget1;
 
-    delete accept_button; delete reset_button;
+    delete accept_button;
 
     delete count_stations; delete count_cars;
 
@@ -91,12 +85,14 @@ TParametersWindow::~TParametersWindow()
     delete verticalLayout;
 }
 
-//void TParametersWindow::setCurrentParameters(const TParametersData parameters)
-//{
-//    qDebug() << "TParametersWindow::setCurrentParameters";
-//    count_stations->setValue(parameters.numStation);
-//    count_cars->setValue(parameters.numCars);
-//}
+
+void TParametersWindow::setCurrentParameters(const TParametersData parameters)
+{
+    qDebug() << "TParametersWindow::setCurrentParameters";
+    count_stations->setValue(parameters.countStations);
+    count_cars->setValue(parameters.countCars);
+}
+
 
 void TParametersWindow::closeEvent(QCloseEvent* event)
 {
@@ -104,11 +100,21 @@ void TParametersWindow::closeEvent(QCloseEvent* event)
     event->accept();
 }
 
-//void TParametersWindow::setParameters()
-//{
-//    TParametersData parameters;
-//    parameters.numStation = count_stations->value();
-//    parameters.numCars = count_cars->value();
-//    emit sendParameters(parameters);
-//}
+
+void TParametersWindow::setParameters()
+{
+    qDebug() << "TParametersWindow::setParameters";
+    TParametersData parameters;
+    parameters.countStations = count_stations->value();
+    parameters.countCars = count_cars->value();
+
+    QJsonObject request;
+    request.insert("type_window", "parametersWindow");
+    request.insert("action", "add_parameters");
+    request.insert("count_stations", parameters.countStations);
+    request.insert("count_cars", parameters.countCars);
+
+    emit send_parametersWindow_request(request);
+
+}
 

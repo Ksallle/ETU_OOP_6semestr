@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef TINTERFACE_H
 #define TINTERFACE_H
 
@@ -8,7 +10,7 @@
 #include "controlwindow.h"
 #include "stateswindow.h"
 #include "parameterswindow.h"
-#include "common.h"
+#include "../common/common.h"
 
 
 class TInterface : public QWidget
@@ -24,26 +26,29 @@ class TInterface : public QWidget
 public:
     TInterface(QWidget *parent = nullptr);
     ~TInterface();
+    void update_windows(QJsonObject response);
 
-//    void setCurrentParameters(const TParametersData);
 
 protected:
     void closeEvent(QCloseEvent*);
 
-public slots:
+private slots:
     void parametersWindowOpen();
     void statesWindowOpen();
     void controlWindowOpen();
 
+
+
+public slots:
     void parametersWindowClosed();
     void statesWindowClosed();
     void controlWindowClosed();
+    void formRequest(QJsonObject);
 
-//    void restoreParameters();
+
 
 signals:
-//    void parametersRequest(EEvents,void*);
-//    void sendParameters(TParametersData);
+    void request(QJsonObject);
 
 };
 
